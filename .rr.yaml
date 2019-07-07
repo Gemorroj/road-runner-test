@@ -1,0 +1,64 @@
+# http service configuration.
+http:
+    address: 0.0.0.0:8080
+    # http worker pool configuration.
+    workers:
+        # php worker command.
+        command:  "php app.php"
+        # connection method (pipes, tcp://:9000, unix://socket.unix). default "pipes"
+        relay:    "pipes"
+        # worker pool configuration.
+        pool:
+            # number of workers to be serving.
+            numWorkers: 4
+            # maximum jobs per worker, 0 - unlimited.
+            maxJobs:  0
+            # for how long worker is allowed to be bootstrapped.
+            allocateTimeout: 60
+            # amount of time given to worker to gracefully destruct itself.
+            destroyTimeout: 60
+
+    ssl:
+        # custom https port (default 443)
+        port:     443
+        # force redirect to https connection
+        redirect: true
+        # ssl cert
+        #cert:     server.crt
+        # ssl private key
+        #key: server.key
+
+    # HTTP service provides HTTP2 transport
+    http2:
+        # enable HTTP/2, only with TSL
+        enabled: true
+
+
+# Additional HTTP headers and CORS control.
+headers:
+    # Automatically add headers to every response.
+    response:
+        "X-Powered-By": "RoadRunner"
+
+# rpc bus allows php application and external clients to talk to rr services.
+rpc:
+    # enable rpc server
+    enable: false
+
+# monitors rr server(s)
+limit:
+    # check worker state each second
+    interval: 10
+
+    # custom watch configuration for each service
+    services:
+        # monitor http workers
+        http:
+            # maximum allowed memory consumption per worker (soft)
+            maxMemory: 100
+            # maximum time to live for the worker (soft)
+            TTL: 0
+            # maximum allowed amount of time worker can spend in idle before being removed (for weak db connections, soft)
+            idleTTL: 0
+            # max_execution_time (brutal)
+            execTTL: 60
